@@ -1,18 +1,12 @@
+//calling my dependencies
 const inquirer = require("inquirer");
 const fs = require('fs');
 const PDFDocument = require('pdfkit');
 const puppeteer = require('puppeteer');
 const axios = require('axios').default;
 const generate = require('./generateHTML');
-// var http = require('http');
-// http.createServer(function (req, res) {
-//   res.write('<html><head></head><body>');
-//   res.write('<p>Write your HTML content here</p>');
-//   res.end('</body></html>');
-// }).listen(1337);
-
-// let user_name;
-
+const doc = new PDFDocument;
+//I'm pulling from the inquirer functions like prompt to ask the user questions
 inquirer.prompt([
     {
         type: "input",
@@ -27,57 +21,71 @@ inquirer.prompt([
             "green",
             "blue",
             "pink",
-            "ed"
-          ]
+            "red"
+        ]
     },
 
-]).then(function (response) {
+]).then(function (data) {
+    //creating my file name
+    const filename = data.name.toLowerCase().split(' ').join('') + "_profile.pdf";
+    const html_for_pdf = generate.generateHTML(data);
+    //   print(html_for_pdf);
+    print(data.name);
+    print(data.color);
 
-    let filename = response.name.toLowerCase().split(' ').join('') + "_profile.pdf";
-    console.log(response)
-    // const profile = generateHTML.generateHTML(response);
-    // console.log(profile)
-    user_name = response.name.toLowerCase();
-    let color = response.color.toLowerCase();
-    console.log(user_name)
-    console.log(color)
+    const user_name = data.name;
+    const user_color = data.color;
     const starred = user_name + "/starred";
-    // const profile_URL = generate.generateHTML(response)
-    const colors = generate.colors
-    console.log(colors)
-    // const html = generate.generateHTML(response);
-    // console.log(html)
-    // doc.text(user_name)
-    // doc.end();
-    get_starred(starred, filename, user_name, color);
-    
-    
-    
+    let js_color
+    if (user_color === "green") {
+        js_color = generate.colors.green;
+    }
+    else if (user_color === "blue") {
+        js_color = generate.colors.blue;
+    }
+    else if (user_color === "pink") {
+        js_color = generate.colors.pink;
+    }
+    else if (user_color === "red") {
+        js_color = generate.colors.red;
+    }
 
+    print(js_color)
+    const wrapper_background = js_color.wrapperBackground;
+    const header_background = js_color.headerBackground;
+    const header_color = js_color.headerColor;
+    const photo_border_color = js_color.photoBorderColor;
+
+    print(wrapper_background);
+    print(header_background);
+    print(header_color);
+    print(photo_border_color);
+
+    get_starred(starred, filename, user_name, user_color, html_for_pdf);
 });
 
-const get_starred = (starred, filename, user_name, color) => {
+const get_starred = (starred, filename, user_name, color, html_for_pdf) => {
     const query_url = "https://api.github.com/users/" + starred;
 
     axios.get(query_url).then(function (response) {
         const num_stars = response.data.length
-        console.log("Number of Starred Repos " + num_stars)
+        print("Number of Starred Repos " + num_stars)
         // /.text("Number of Starred Repos " + num_stars)
-        get_github_request(filename, user_name, color, num_stars)
+        get_github_request(filename, user_name, color, num_stars, html_for_pdf)
     })
-    
+
 };
 
 
 
 
-const get_github_request = (filename, user_name, color, num_stars) => {
+const get_github_request = (filename, user_name, color, num_stars, html_for_pdf) => {
     const query_url = "https://api.github.com/users/" + user_name;
 
     axios.get(query_url).then(function (response) {
 
         const user_info = response.data
-        // console.log(response.name)
+        // print(response.name)
         const name = user_info.name
         const profile_img = user_info.avatar_url
         const location = user_info.location
@@ -86,17 +94,16 @@ const get_github_request = (filename, user_name, color, num_stars) => {
         const num_repos = user_info.public_repos
         const num_followers = user_info.followers
         const num_following = user_info.following
-        
-        // run(filename, user_name, color, num_stars, name, profile_img, location, github_url, blog_url, num_repos, num_followers, num_following);
-        
-        // get_name(user_info);
-        // get_profile_img(user_info);
-        // get_location(user_info);
-        // get_github_url(user_info);
-        // get_blog(user_info);
-        // get_num_repositories(user_info);
-        // get_num_followers(user_info);
-        // get_num_following(user_info);
+        // print(name)
+        // print(profile_img)
+        // print(location)
+        // print(github_url)
+        // print(blog_url)
+        // print(num_repos)
+        // print(num_followers)
+        // print(num_following)
+
+        run(filename, user_name, color, num_stars, name, profile_img, location, github_url, blog_url, num_repos, num_followers, num_following, html_for_pdf);
 
     })
 };
@@ -104,624 +111,100 @@ const get_github_request = (filename, user_name, color, num_stars) => {
 
 
 
-async function run(filename, user_name, color, num_stars, name, profile_img, location, github_url, blog_url, num_repos, num_followers, num_following) {
+async function run(filename, user_name, color, num_stars, name, profile_img, location, github_url, blog_url, num_repos, num_followers, num_following, html_for_pdf) {
     try {
         const browser = await puppeteer.launch();
         const page = await browser.newPage();
-        const html = (`<body>
-            <h1>${name}</h1>`);
-        await page.setContent(html);
+        const html = html_for_pdf;
+        await page.setContent(`
+        ${html}
+        <body>
+            <main>
+                <div class="row wrapper">
+                    <div class="photo-header container">
+                        <div class="row">
+
+                            <img src=${profile_img} alt="profile" class="">
+
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <div class="col"></div>
+                                <h3>Hi!</h3>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <h3>My Name is ${name}!</h3>
+                        </div>
+                        <div class="row">
+                            <h5>Currently @ UT Texas Coding Bootcamp</h5>
+                        </div>
+                        <div class="row links-nav">
+                            <div class="col">
+                                <h6><a href="" class="nav-link"></a><i class="fas fa-location-arrow"></i>${location}</h6>
+                            </div>
+                            <div class="col">
+                                <h6><a href="${github_url}" class="nav-link"></a><i class="fab fa-github"></i>GitHub</h6>
+                            </div>
+                            <div class="col"></div>
+                            <h6><a href="${blog_url}" class="nav-link"></a><i class="fas fa-rss"></i>Blog</h6>
+                        </div>
+                    </div>
+                </div>
+                </div>
+                </div>
+                <div class="container">
+                    <div class="row">
+                        <div class="col">
+                            <h6 class="col">I create, learn and create some more</h6>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <div class="card">
+                            <h6>Public Repositories</h6>
+                            <h6>${num_repos}</h6>
+                        </div>
+                        <div class="card">
+                            <h6>GitHub Stars</h6>
+                            <h6>${num_stars}</h6>
+                        </div>
+
+                    </div>
+                    <div class="col">
+                        <div class="card">
+                            <h6>Followers</h6>
+                            <h6>${num_followers}</h6>
+                        </div>
+                        <div class="card">
+                            <h6>Following</h6>
+                            <h6>${num_following}</h6>
+                        </div>
+                    </div>
+                </div>
+                <div class="row wrapper">
+
+                </div>
+            </main>
+        </body>
+
+        </html>`);
+                    
         await page.emulateMedia('screen');
         await page.pdf({
             path: filename,
             format: 'A4',
             printBackground: true
         });
-        // page.addStyleTag({content: '.body{background: ' + color + '}'});
-        console.log('done');
+        print('done');
         await browser.close();
         process.exit();
     } catch (e) {
-        console.log('our error', e);
+        print('our error', e);
     }
 }
 
-// const get_name = (user_info) => {
-//     const name = user_info.name
-//     console.log(name)
-//     // /.text(name)
-
-// }
-
-
-// const get_profile_img = (user_info) => {
-//     const profile_img = user_info.avatar_url
-//     console.log("Image " + profile_img + ".png")
-//     // /.image(profile_img + ".png", 50, 150, { width: 300 });
-
-// }
-
-// const get_location = (user_info) => {
-//     const location = user_info.location
-//     console.log("Location " + location)
-// }
-
-// const get_github_url = (user_info) => {
-//     const github_url = user_info.html_url
-//     console.log("GitHub URL " + github_url)
-// }
-
-// const get_blog = (user_info) => {
-//     const blog_url = user_info.blog
-//     console.log("Blog URL " + blog_url)
-// }
-
-// const get_num_repositories = (user_info) => {
-//     const num_repos = user_info.public_repos
-//     console.log("Number of Repos " + num_repos)
-// }
-
-// const get_num_followers = (user_info) => {
-//     const num_followers = user_info.followers
-//     console.log("Number of Followers " + num_followers)
-// }
-
-// const get_num_following = (user_info) => {
-//     const num_following = user_info.following
-//     console.log("Number Following " + num_following)
-// }
-
-
-
-// const inquirer = require("inquirer");
-// const fs = require('fs');
-// const PDFDocument = require('pdfkit');
-// // const puppeteer = require('puppeteer');
-// const axios = require('axios').default;
-// const doc = new PDFDocument;
-// const generateHTML = require('./generateHTML.js');
-
-// // console.log(generateHTML)
-
-
-// inquirer.prompt([
-//     {
-//         type: "input",
-//         name: "name",
-//         message: "What is your GitHub Username?"
-//     },
-//     {
-//         type: "rawlist",
-//         name: "color",
-//         message: "What is your favorite color?",
-//         choices: [
-//             "Green",
-//             "Blue",
-//             "Pink",
-//             "Red"
-//           ]
-//     },
-
-// ]).then(function (response) {
-
-//     let filename = response.name.toLowerCase().split(' ').join('') + "_profile.pdf";
-
-     
-//     doc.pipe(fs.createWriteStream(filename));
-//     user_name = response.name.toLowerCase();
-//     let color = response.color.toLowerCase();
-//     console.log(user_name)
-//     console.log(color)
-//     const profilePDF = generateHTML.color; 
-//     console.log(profilePDF)
-//     const starred = user_name + "/starred";
-//     // doc.text(user_name)
-//     // doc.end();
-//     get_starred(starred, filename, user_name, color);
-    
-// });
-
-// const get_starred = (starred, filename, user_name, color) => {
-//     const query_url = "https://api.github.com/users/" + starred;
-
-//     axios.get(query_url).then(function (response) {
-//         const num_stars = response.data.length
-//         console.log("Number of Starred Repos " + num_stars)
-//         // /.text("Number of Starred Repos " + num_stars)
-//         get_github_request(filename, user_name, color, num_stars)
-//     })
-    
-// };
-
-
-
-
-// const get_github_request = (filename, user_name, color, num_stars) => {
-//     const query_url = "https://api.github.com/users/" + user_name;
-
-//     axios.get(query_url).then(function (response) {
-
-//         const user_info = response.data
-//         // console.log(response.name)
-//         const name = user_info.name
-//         const profile_img = user_info.avatar_url
-//         const location = user_info.location
-//         const github_url = user_info.html_url
-//         const blog_url = user_info.blog
-//         const num_repos = user_info.public_repos
-//         const num_followers = user_info.followers
-//         const num_following = user_info.following
-//         // console.log(user_info)
-        
-
-//         doc.end();
-        
-        // run(filename, user_name, color, num_stars, name, profile_img, location, github_url, blog_url, num_repos, num_followers, num_following);
-        
-        // get_name(user_info);
-        // get_profile_img(user_info);
-        // get_location(user_info);
-        // get_github_url(user_info);
-        // get_blog(user_info);
-        // get_num_repositories(user_info);
-        // get_num_followers(user_info);
-        // get_num_following(user_info);
-
-//     })
-// };
-
-
-
-
-// async function run(filename, user_name, color, num_stars, name, profile_img, location, github_url, blog_url, num_repos, num_followers, num_following) {
-//     try {
-//         const browser = await puppeteer.launch();
-//         const page = await browser.newPage();
-//         const html = ("<h1>" + user_name + "</h1> <img src='" + profile_img + "'.png> <h1>" + name + "</h1>");
-//         await page.setContent(html);
-//         // '<img src="' + profile_img + '.png" >')
-//         // await page.setContent('<img src="' + profile_img + '.png" >')
-//         // await page.setContent('<h1>' + name + '</h1>')
-//         // await page.setContent('<h1>' + location + '</h1>')
-//         // await page.setContent('<h1>' + github_url + '</h1>')
-//         // await page.setContent('<h1>' + blog_url + '</h1>')
-//         // await page.setContent('<h1>' + num_repos + '</h1>')
-//         // await page.setContent('<h1>' + num_followers + '</h1>')
-//         // await page.setContent('<h1>' + num_following + '</h1>')
-//         // await page.setContent('<h1>' + num_stars + '</h1>')
-//         await page.emulateMedia('screen');
-//         await page.pdf({
-//             path: filename,
-//             format: 'A4',
-//             printBackground: true
-//         });
-//         // page.addStyleTag({content: '.body{background: ' + color + '}'});
-//         console.log('done');
-//         await browser.close();
-//         process.exit();
-//     } catch (e) {
-//         console.log('our error', e);
-//     }
-// }
-
-// const get_name = (user_info) => {
-//     const name = user_info.name
-//     console.log(name)
-//     // /.text(name)
-
-// }
-
-
-// const get_profile_img = (user_info) => {
-//     const profile_img = user_info.avatar_url
-//     console.log("Image " + profile_img + ".png")
-//     // /.image(profile_img + ".png", 50, 150, { width: 300 });
-
-// }
-
-// const get_location = (user_info) => {
-//     const location = user_info.location
-//     console.log("Location " + location)
-// }
-
-// const get_github_url = (user_info) => {
-//     const github_url = user_info.html_url
-//     console.log("GitHub URL " + github_url)
-// }
-
-// const get_blog = (user_info) => {
-//     const blog_url = user_info.blog
-//     console.log("Blog URL " + blog_url)
-// }
-
-// const get_num_repositories = (user_info) => {
-//     const num_repos = user_info.public_repos
-//     console.log("Number of Repos " + num_repos)
-// }
-
-// const get_num_followers = (user_info) => {
-//     const num_followers = user_info.followers
-//     console.log("Number of Followers " + num_followers)
-// }
-
-// const get_num_following = (user_info) => {
-//     const num_following = user_info.following
-//     console.log("Number Following " + num_following)
-// }
-
-
-// const questions = [
-  
-// ];
-
-// function writeToFile(fileName, data) {
- 
-// }
-
-// function init() {
-
-// init();
-
-
-
-
-
-// const inquirer = require("inquirer");
-// const fs = require('fs');
-// const PDFDocument = require('pdfkit');
-// const puppeteer = require('puppeteer');
-// const axios = require('axios').default;
-// const generate = require('./generateHTML');
-// console.log(generate.generateHTML)
-// // var http = require('http');
-// // http.createServer(function (req, res) {
-// //   res.write('<html><head></head><body>');
-// //   res.write('<p>Write your HTML content here</p>');
-// //   res.end('</body></html>');
-// // }).listen(1337);
-
-// // let user_name;
-
-// inquirer.prompt([
-//     {
-//         type: "input",
-//         name: "name",
-//         message: "What is your GitHub Username?"
-//     },
-//     {
-//         type: "rawlist",
-//         name: "color",
-//         message: "What is your favorite color?",
-//         choices: [
-//             "Green",
-//             "Blue",
-//             "Pink",
-//             "Red"
-//           ]
-//     },
-
-// ]).then(function (response) {
-
-//     let filename = response.name.toLowerCase().split(' ').join('') + "_profile.pdf";
-//     user_name = response.name.toLowerCase();
-//     let color = response.color.toLowerCase();
-//     console.log(user_name)
-//     console.log(color)
-//     const starred = user_name + "/starred";
-//     const profile_URL = generate.generateHTML(response)
-//     // doc.text(user_name)
-//     // doc.end();
-//     get_starred(starred, filename, user_name, color);
-    
-    
-    
-
-// });
-
-// const get_starred = (starred, filename, user_name, color) => {
-//     const query_url = "https://api.github.com/users/" + starred;
-
-//     axios.get(query_url).then(function (response) {
-//         const num_stars = response.data.length
-//         console.log("Number of Starred Repos " + num_stars)
-//         // /.text("Number of Starred Repos " + num_stars)
-//         get_github_request(filename, user_name, color, num_stars)
-//     })
-    
-// };
-
-
-
-
-// const get_github_request = (filename, user_name, color, num_stars) => {
-//     const query_url = "https://api.github.com/users/" + user_name;
-
-//     axios.get(query_url).then(function (response) {
-
-//         const user_info = response.data
-//         // console.log(response.name)
-//         const name = user_info.name
-//         const profile_img = user_info.avatar_url
-//         const location = user_info.location
-//         const github_url = user_info.html_url
-//         const blog_url = user_info.blog
-//         const num_repos = user_info.public_repos
-//         const num_followers = user_info.followers
-//         const num_following = user_info.following
-        
-//         run(filename, user_name, color, num_stars, name, profile_img, location, github_url, blog_url, num_repos, num_followers, num_following);
-        
-//         // get_name(user_info);
-//         // get_profile_img(user_info);
-//         // get_location(user_info);
-//         // get_github_url(user_info);
-//         // get_blog(user_info);
-//         // get_num_repositories(user_info);
-//         // get_num_followers(user_info);
-//         // get_num_following(user_info);
-
-//     })
-// };
-
-
-
-
-// async function run(filename, user_name, color, num_stars, name, profile_img, location, github_url, blog_url, num_repos, num_followers, num_following) {
-//     try {
-//         const browser = await puppeteer.launch();
-//         const page = await browser.newPage();
-//         // const html = ("<h1>" + name + "<h1>");
-//         // await page.setContent(html);
-//         await page.emulateMedia('screen');
-//         await page.pdf({
-//             path: filename,
-//             format: 'A4',
-//             printBackground: true
-//         });
-//         // page.addStyleTag({content: '.body{background: ' + color + '}'});
-//         console.log('done');
-//         await browser.close();
-//         process.exit();
-//     } catch (e) {
-//         console.log('our error', e);
-//     }
-// }
-
-// const get_name = (user_info) => {
-//     const name = user_info.name
-//     console.log(name)
-//     // /.text(name)
-
-// }
-
-
-// const get_profile_img = (user_info) => {
-//     const profile_img = user_info.avatar_url
-//     console.log("Image " + profile_img + ".png")
-//     // /.image(profile_img + ".png", 50, 150, { width: 300 });
-
-// }
-
-// const get_location = (user_info) => {
-//     const location = user_info.location
-//     console.log("Location " + location)
-// }
-
-// const get_github_url = (user_info) => {
-//     const github_url = user_info.html_url
-//     console.log("GitHub URL " + github_url)
-// }
-
-// const get_blog = (user_info) => {
-//     const blog_url = user_info.blog
-//     console.log("Blog URL " + blog_url)
-// }
-
-// const get_num_repositories = (user_info) => {
-//     const num_repos = user_info.public_repos
-//     console.log("Number of Repos " + num_repos)
-// }
-
-// const get_num_followers = (user_info) => {
-//     const num_followers = user_info.followers
-//     console.log("Number of Followers " + num_followers)
-// }
-
-// const get_num_following = (user_info) => {
-//     const num_following = user_info.following
-//     console.log("Number Following " + num_following)
-// }
-
-
-
-// const inquirer = require("inquirer");
-// const fs = require('fs');
-// const PDFDocument = require('pdfkit');
-// // const puppeteer = require('puppeteer');
-// const axios = require('axios').default;
-// const doc = new PDFDocument;
-// const generateHTML = require('./generateHTML.js');
-
-// // console.log(generateHTML)
-
-
-// inquirer.prompt([
-//     {
-//         type: "input",
-//         name: "name",
-//         message: "What is your GitHub Username?"
-//     },
-//     {
-//         type: "rawlist",
-//         name: "color",
-//         message: "What is your favorite color?",
-//         choices: [
-//             "Green",
-//             "Blue",
-//             "Pink",
-//             "Red"
-//           ]
-//     },
-
-// ]).then(function (response) {
-
-//     let filename = response.name.toLowerCase().split(' ').join('') + "_profile.pdf";
-
-     
-//     doc.pipe(fs.createWriteStream(filename));
-//     user_name = response.name.toLowerCase();
-//     let color = response.color.toLowerCase();
-//     console.log(user_name)
-//     console.log(color)
-//     const profilePDF = generateHTML.color; 
-//     console.log(profilePDF)
-//     const starred = user_name + "/starred";
-//     // doc.text(user_name)
-//     // doc.end();
-//     get_starred(starred, filename, user_name, color);
-    
-// });
-
-// const get_starred = (starred, filename, user_name, color) => {
-//     const query_url = "https://api.github.com/users/" + starred;
-
-//     axios.get(query_url).then(function (response) {
-//         const num_stars = response.data.length
-//         console.log("Number of Starred Repos " + num_stars)
-//         // /.text("Number of Starred Repos " + num_stars)
-//         get_github_request(filename, user_name, color, num_stars)
-//     })
-    
-// };
-
-
-
-
-// const get_github_request = (filename, user_name, color, num_stars) => {
-//     const query_url = "https://api.github.com/users/" + user_name;
-
-//     axios.get(query_url).then(function (response) {
-
-//         const user_info = response.data
-//         // console.log(response.name)
-//         const name = user_info.name
-//         const profile_img = user_info.avatar_url
-//         const location = user_info.location
-//         const github_url = user_info.html_url
-//         const blog_url = user_info.blog
-//         const num_repos = user_info.public_repos
-//         const num_followers = user_info.followers
-//         const num_following = user_info.following
-//         // console.log(user_info)
-        
-
-//         doc.end();
-        
-        // run(filename, user_name, color, num_stars, name, profile_img, location, github_url, blog_url, num_repos, num_followers, num_following);
-        
-        // get_name(user_info);
-        // get_profile_img(user_info);
-        // get_location(user_info);
-        // get_github_url(user_info);
-        // get_blog(user_info);
-        // get_num_repositories(user_info);
-        // get_num_followers(user_info);
-        // get_num_following(user_info);
-
-//     })
-// };
-
-
-
-
-// async function run(filename, user_name, color, num_stars, name, profile_img, location, github_url, blog_url, num_repos, num_followers, num_following) {
-//     try {
-//         const browser = await puppeteer.launch();
-//         const page = await browser.newPage();
-//         const html = ("<h1>" + user_name + "</h1> <img src='" + profile_img + "'.png> <h1>" + name + "</h1>");
-//         await page.setContent(html);
-//         // '<img src="' + profile_img + '.png" >')
-//         // await page.setContent('<img src="' + profile_img + '.png" >')
-//         // await page.setContent('<h1>' + name + '</h1>')
-//         // await page.setContent('<h1>' + location + '</h1>')
-//         // await page.setContent('<h1>' + github_url + '</h1>')
-//         // await page.setContent('<h1>' + blog_url + '</h1>')
-//         // await page.setContent('<h1>' + num_repos + '</h1>')
-//         // await page.setContent('<h1>' + num_followers + '</h1>')
-//         // await page.setContent('<h1>' + num_following + '</h1>')
-//         // await page.setContent('<h1>' + num_stars + '</h1>')
-//         await page.emulateMedia('screen');
-//         await page.pdf({
-//             path: filename,
-//             format: 'A4',
-//             printBackground: true
-//         });
-//         // page.addStyleTag({content: '.body{background: ' + color + '}'});
-//         console.log('done');
-//         await browser.close();
-//         process.exit();
-//     } catch (e) {
-//         console.log('our error', e);
-//     }
-// }
-
-// const get_name = (user_info) => {
-//     const name = user_info.name
-//     console.log(name)
-//     // /.text(name)
-
-// }
-
-
-// const get_profile_img = (user_info) => {
-//     const profile_img = user_info.avatar_url
-//     console.log("Image " + profile_img + ".png")
-//     // /.image(profile_img + ".png", 50, 150, { width: 300 });
-
-// }
-
-// const get_location = (user_info) => {
-//     const location = user_info.location
-//     console.log("Location " + location)
-// }
-
-// const get_github_url = (user_info) => {
-//     const github_url = user_info.html_url
-//     console.log("GitHub URL " + github_url)
-// }
-
-// const get_blog = (user_info) => {
-//     const blog_url = user_info.blog
-//     console.log("Blog URL " + blog_url)
-// }
-
-// const get_num_repositories = (user_info) => {
-//     const num_repos = user_info.public_repos
-//     console.log("Number of Repos " + num_repos)
-// }
-
-// const get_num_followers = (user_info) => {
-//     const num_followers = user_info.followers
-//     console.log("Number of Followers " + num_followers)
-// }
-
-// const get_num_following = (user_info) => {
-//     const num_following = user_info.following
-//     console.log("Number Following " + num_following)
-// }
-
-
-// const questions = [
-  
-// ];
-
-// function writeToFile(fileName, data) {
- 
-// }
-
-// function init() {
-
-// init();
-
-
-
+function print(x) {
+    console.log(x)
+}

@@ -125,15 +125,6 @@ const get_github_request = (filename, user_name, color, num_stars, html_for_pdf)
 
         run(filename, user_name, color, num_stars, name, profile_img, location, github_url, blog_url, num_repos, num_followers, num_following, html_for_pdf);
 
-        // get_name(user_info);
-        // get_profile_img(user_info);
-        // get_location(user_info);
-        // get_github_url(user_info);
-        // get_blog(user_info);
-        // get_num_repositories(user_info);
-        // get_num_followers(user_info);
-        // get_num_following(user_info);
-
     })
 };
 
