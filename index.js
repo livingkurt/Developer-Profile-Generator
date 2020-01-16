@@ -33,6 +33,11 @@ inquirer.prompt([
             "red"
         ]
     },
+    {
+        type: "confirm",
+        name: "html",
+        message: "Would you like to create a index.html as well? [y/n]",
+    },
 // Then Once those choices have been made
 ]).then(function (data) {
     // Progress Message
@@ -45,13 +50,15 @@ inquirer.prompt([
     const user_name = data.name;
     // Assing user color to variable
     const user_color = data.color;
+    // Assing user color to variable
+    const html_choice = data.html;
     // Create another way to call the github api to get the amount of starred repos
     const starred = user_name + "/starred";
     // Call the Get Starred function to get how many starred repos you have
-    get_starred(starred, filename, user_name, html_for_pdf);
+    get_starred(starred, filename, user_name, html_for_pdf, html_choice);
 });
 // Function to get how many starred repos you have
-const get_starred = (starred, filename, user_name, html_for_pdf) => {
+const get_starred = (starred, filename, user_name, html_for_pdf, html_choice) => {
     // Assign queryurl to variable
     const query_url = "https://api.github.com/users/" + starred;
     // Make a request to the github api
@@ -59,12 +66,12 @@ const get_starred = (starred, filename, user_name, html_for_pdf) => {
         // Get the amount of stars in the array of starred repos
         const num_stars = response.data.length
         // Call the function to get all of the other information from github
-        get_github_request(filename, user_name, num_stars, html_for_pdf)
+        get_github_request(filename, user_name, num_stars, html_for_pdf, html_choice)
     })
 
 };
 // Function to get all of the other information from github
-const get_github_request = (filename, user_name, num_stars, html_for_pdf) => {
+const get_github_request = (filename, user_name, num_stars, html_for_pdf, html_choice) => {
     // Progress Message
     print("We're working on it...\n");
     // Assign queryurl to variable
@@ -92,12 +99,12 @@ const get_github_request = (filename, user_name, num_stars, html_for_pdf) => {
         // Assign number of people your following to variable
         const num_following = user_info.following
         // Call the function to create the pdf from the github information
-        create_pdf(filename, user_name, num_stars, name, profile_img, location, github_url, bio, blog_url, num_repos, num_followers, num_following, html_for_pdf);
+        create_pdf(filename, user_name, num_stars, name, profile_img, location, github_url, bio, blog_url, num_repos, num_followers, num_following, html_for_pdf, html_choice);
 
     })
 };
 // Function to create the pdf from the github information
-async function create_pdf(filename, user_name, num_stars, name, profile_img, location, github_url, bio, blog_url, num_repos, num_followers, num_following, html_for_pdf) {
+async function create_pdf(filename, user_name, num_stars, name, profile_img, location, github_url, bio, blog_url, num_repos, num_followers, num_following, html_for_pdf, html_choice) {
     // Progress Message
     print("Almost...\n");
     // Try the following things
@@ -171,8 +178,10 @@ async function create_pdf(filename, user_name, num_stars, name, profile_img, loc
         </html>;`
         // Add html and github information to pdf
         await page.setContent(html);
-        // Creates html file as well
-        await fs.writeFile('index.html', html, (error) => { /* handle error */ });
+        if (html_choice){
+            // Creates html file as well
+            await fs.writeFile('index.html', html, (error) => { /* handle error */ });
+        }
         // Gets information about screen size
         await page.emulateMedia('screen');
         // Actually creates the pdf document and formats
