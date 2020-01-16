@@ -90,17 +90,18 @@ const get_github_request = (filename, user_name, color, num_stars, html_for_pdf)
         const profile_img = user_info.avatar_url
         const location = user_info.location
         const github_url = user_info.html_url
+        const bio = user_info.bio
         const blog_url = user_info.blog
         const num_repos = user_info.public_repos
         const num_followers = user_info.followers
         const num_following = user_info.following
 
-        run(filename, user_name, color, num_stars, name, profile_img, location, github_url, blog_url, num_repos, num_followers, num_following, html_for_pdf);
+        run(filename, user_name, color, num_stars, name, profile_img, location, github_url, bio, blog_url, num_repos, num_followers, num_following, html_for_pdf);
 
     })
 };
 
-async function run(filename, user_name, color, num_stars, name, profile_img, location, github_url, blog_url, num_repos, num_followers, num_following, html_for_pdf) {
+async function run(filename, user_name, color, num_stars, name, profile_img, location, github_url, bio, blog_url, num_repos, num_followers, num_following, html_for_pdf) {
     try {
         const browser = await puppeteer.launch();
         const page = await browser.newPage();
@@ -119,12 +120,12 @@ async function run(filename, user_name, color, num_stars, name, profile_img, loc
                     <img src=${profile_img} height="100px" width="100px"alt="profile" class="">
                 <!-- </div> -->
                 <div class="container" style="width: 100%; text-align: center; padding: 0px">
-                    <h3 style="margin-top: 10px;">Hi!</h3>
+                    <h3 style="margin-top: 30px;">Hi!</h3>
                 </div>
-                <div class="row" style="width: 100%; text-align: center; margin: 0px auto;">
+                <div class="row" style="width: 100%; text-align: center; margin: 10px auto;">
                     <h3 style="width: 100%;">My Name is ${name}!</h3>
                 </div>
-                <div class="row">
+                <div class="">
                     <h6>Currently @ UT Texas Coding Bootcamp</h6>
                 </div>
                 <div class="links-nav">
@@ -142,7 +143,7 @@ async function run(filename, user_name, color, num_stars, name, profile_img, loc
         </div>
         <div class="container" style="padding-bottom: 0px;">
             <div class="">
-                <h4 id="statement"style="margin-top: 27px;" class="col">I create, learn and create some more</h4>
+                <h4 id="statement"style="margin-top: 27px;" class="col">${bio}</h4>
             </div>
         </div>
         <div class="row">
@@ -168,7 +169,7 @@ async function run(filename, user_name, color, num_stars, name, profile_img, loc
                 </div>
             </div>
         </div>
-        <div class="wrapper" style="height: 233px; margin-bottom: 0px;">
+        <div class="wrapper" style="height: 202px; margin-bottom: 0px;">
 
         </div>
     </main>
