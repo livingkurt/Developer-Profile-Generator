@@ -24,6 +24,7 @@
     "inquirer": "^7.0.3",
     "jquery": "^3.4.1",
     "pdfkit": "^0.11.0",
-    "puppeteer": "^2.0.0"
+    "puppeteer": "^2.0.0",
+    "terminal-link": "^2.1.1"
   }
 }
