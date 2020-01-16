@@ -8,8 +8,10 @@ const puppeteer = require('puppeteer');
 const axios = require('axios').default;
 // Calling to generateHTML.js to get styling and colors
 const generate = require('./generateHTML');
-
+// Calling to terminalLink to add a nice little link at the bottom of the terminal when pdf is done
 const terminalLink = require('terminal-link');
+// Calling to fs to have access to the file system
+const fs = require('fs');
 
 // Initiate terminal based user interface
 inquirer.prompt([
@@ -105,10 +107,8 @@ async function create_pdf(filename, user_name, num_stars, name, profile_img, loc
         // Create a new page
         const page = await browser.newPage();
         // Assign the html from the generateHTML.js file to a new variable
-        const html = html_for_pdf;
-        // Add html and github information to pdf
-        await page.setContent(`
-        ${html}
+        const html = 
+        `${html_for_pdf}
         </head>
         <body style="font-family: "Custom_font";>
             <main style="padding: 0px">
@@ -168,7 +168,11 @@ async function create_pdf(filename, user_name, num_stars, name, profile_img, loc
                 </div>
             </main>
         </body>
-        </html>`);
+        </html>;`
+        // Add html and github information to pdf
+        await page.setContent(html);
+        // Creates html file as well
+        await fs.writeFile('index.html', html, (error) => { /* handle error */ });
         // Gets information about screen size
         await page.emulateMedia('screen');
         // Actually creates the pdf document and formats
