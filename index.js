@@ -1,11 +1,11 @@
 //calling my dependencies
 const inquirer = require("inquirer");
 const fs = require('fs');
-const PDFDocument = require('pdfkit');
+// const PDFDocument = require('pdfkit');
 const puppeteer = require('puppeteer');
 const axios = require('axios').default;
 const generate = require('./generateHTML');
-const doc = new PDFDocument;
+// const doc = new PDFDocument;
 //I'm pulling from the inquirer functions like prompt to ask the user questions
 
 
