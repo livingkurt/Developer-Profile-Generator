@@ -55,11 +55,10 @@ Then produces a sleek and clean pdf of all your github user information to be us
 
 ## Back End
 
-This application was fully made in the backend. I used node.js, axios, and puppeteer to gather all of the information from github, 
+This application was fully made in the backend. I used node.js, axios, and puppeteer to gather all of the information from github, create the pdf file, and place all the desired information in a nice and neat way.
 
-## Issues
+## Challenges
 
-* Major Cities Collapse will not uncollapse when changing window size
-* Google Chrome will not do the api calls, safari does
+One of the most challenging aspects of this project was using a second .js file that held all of the styling for my pdf. Without documentation with what classes go where. It was tough, but I am up for the challenge. I find great satisfaction in creating something exactly as someone wants it to be. It makes it easier for everyone!
 
 ![Developer-Profile-Generator](images/Full.png)
