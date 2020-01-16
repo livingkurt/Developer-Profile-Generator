@@ -1,27 +1,31 @@
 const colors = {
   green: {
-    wrapperBackground: "#E6E1C3",
-    headerBackground: "#C1C72C",
-    headerColor: "black",
-    photoBorderColor: "#black"
+    wrapperBackground: "#277E4E",
+    headerBackground: "#3BBF77",
+    headerColor: "white",
+    photoBorderColor: "#144028",
+    statmentColor: "#144028"
   },
   blue: {
-    wrapperBackground: "#5F64D3",
-    headerBackground: "#26175A",
+    wrapperBackground: "#23537F",
+    headerBackground: "#367DBF",
     headerColor: "white",
-    photoBorderColor: "#73448C"
+    photoBorderColor: "#122A40",
+    statmentColor: "#122A40"
   },
   pink: {
-    wrapperBackground: "#879CDF",
-    headerBackground: "#FF8374",
+    wrapperBackground: "#7D4154",
+    headerBackground: "#BF6381",
     headerColor: "white",
-    photoBorderColor: "#FEE24C"
+    photoBorderColor: "#41222C",
+    statmentColor: "#41222C"
   },
   red: {
-    wrapperBackground: "#DE9967",
-    headerBackground: "#870603",
+    wrapperBackground: "#7D3636",
+    headerBackground: "#BF5252",
     headerColor: "white",
-    photoBorderColor: "white"
+    photoBorderColor: "411C1C",
+    statmentColor: "#411C1C"
   }
 };
 
@@ -60,7 +64,7 @@ module.exports = {
          body {
          background-color: white;
          -webkit-print-color-adjust: exact !important;
-         font-family: 'Cabin', sans-serif;
+         font-family: Futura, sans-serif;
          }
          main {
          background-color: #E9EDEE;
@@ -68,7 +72,7 @@ module.exports = {
          padding-top: 30px;
          }
          h1, h2, h3, h4, h5, h6 {
-         font-family: 'BioRhyme', serif;
+         font-family: Futura, serif;
          margin: 0;
          }
          h1 {
@@ -88,6 +92,9 @@ module.exports = {
          }
          h6 {
          font-size: 1.2em;
+         }
+         #statement{
+          color: ${colors[data.color].statmentColor};
          }
          .photo-header {
          position: relative;

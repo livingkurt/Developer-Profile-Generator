@@ -7,6 +7,9 @@ const axios = require('axios').default;
 const generate = require('./generateHTML');
 const doc = new PDFDocument;
 //I'm pulling from the inquirer functions like prompt to ask the user questions
+
+
+
 inquirer.prompt([
     {
         type: "input",
@@ -76,9 +79,6 @@ const get_starred = (starred, filename, user_name, color, html_for_pdf) => {
 
 };
 
-
-
-
 const get_github_request = (filename, user_name, color, num_stars, html_for_pdf) => {
     const query_url = "https://api.github.com/users/" + user_name;
 
@@ -94,22 +94,11 @@ const get_github_request = (filename, user_name, color, num_stars, html_for_pdf)
         const num_repos = user_info.public_repos
         const num_followers = user_info.followers
         const num_following = user_info.following
-        // print(name)
-        // print(profile_img)
-        // print(location)
-        // print(github_url)
-        // print(blog_url)
-        // print(num_repos)
-        // print(num_followers)
-        // print(num_following)
 
         run(filename, user_name, color, num_stars, name, profile_img, location, github_url, blog_url, num_repos, num_followers, num_following, html_for_pdf);
 
     })
 };
-
-
-
 
 async function run(filename, user_name, color, num_stars, name, profile_img, location, github_url, blog_url, num_repos, num_followers, num_following, html_for_pdf) {
     try {
@@ -118,78 +107,74 @@ async function run(filename, user_name, color, num_stars, name, profile_img, loc
         const html = html_for_pdf;
         await page.setContent(`
         ${html}
-        <body>
-            <main>
-                <div class="row wrapper">
-                    <div class="photo-header container">
-                        <div class="row">
+        
+        </head>
 
-                            <img src=${profile_img} alt="profile" class="">
-
-                        </div>
-                        <div class="row">
-                            <div class="col">
-                                <div class="col"></div>
-                                <h3>Hi!</h3>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <h3>My Name is ${name}!</h3>
-                        </div>
-                        <div class="row">
-                            <h5>Currently @ UT Texas Coding Bootcamp</h5>
-                        </div>
-                        <div class="row links-nav">
-                            <div class="col">
-                                <h6><a href="" class="nav-link"></a><i class="fas fa-location-arrow"></i>${location}</h6>
-                            </div>
-                            <div class="col">
-                                <h6><a href="${github_url}" class="nav-link"></a><i class="fab fa-github"></i>GitHub</h6>
-                            </div>
-                            <div class="col"></div>
-                            <h6><a href="${blog_url}" class="nav-link"></a><i class="fas fa-rss"></i>Blog</h6>
-                        </div>
-                    </div>
+<body style="font-family: "Custom_font";>
+    <main style="padding: 0px">
+        <div class="row wrapper" style="padding: 0px;margin: 0px;">
+            <div class="photo-header" style="margin-top: 100px;
+            ">
+                <!-- <div class="row container"> -->
+                    <img src=${profile_img} height="100px" width="100px"alt="profile" class="">
+                <!-- </div> -->
+                <div class="container" style="width: 100%; text-align: center; padding: 0px">
+                    <h3 style="margin-top: 10px;">Hi!</h3>
                 </div>
-                </div>
-                </div>
-                <div class="container">
-                    <div class="row">
-                        <div class="col">
-                            <h6 class="col">I create, learn and create some more</h6>
-                        </div>
-                    </div>
+                <div class="row" style="width: 100%; text-align: center; margin: 0px auto;">
+                    <h3 style="width: 100%;">My Name is ${name}!</h3>
                 </div>
                 <div class="row">
-                    <div class="col">
-                        <div class="card">
-                            <h6>Public Repositories</h6>
-                            <h6>${num_repos}</h6>
-                        </div>
-                        <div class="card">
-                            <h6>GitHub Stars</h6>
-                            <h6>${num_stars}</h6>
-                        </div>
-
+                    <h6>Currently @ UT Texas Coding Bootcamp</h6>
+                </div>
+                <div class="links-nav">
+                    <div class="nav-link">
+                        <h6><a href="" class=""></a><i class="fas fa-location-arrow"></i>${location}</h6>
                     </div>
-                    <div class="col">
-                        <div class="card">
-                            <h6>Followers</h6>
-                            <h6>${num_followers}</h6>
-                        </div>
-                        <div class="card">
-                            <h6>Following</h6>
-                            <h6>${num_following}</h6>
-                        </div>
+                    <div class="nav-link">
+                        <h6><a href="${github_url}" class=""></a><i class="fab fa-github"></i>GitHub</h6>
+                    </div>
+                    <div class="nav-link">
+                        <h6><a href="${blog_url}" class=""></a><i class="fas fa-rss"></i>Blog</h6>
                     </div>
                 </div>
-                <div class="row wrapper">
-
+            </div>
+        </div>
+        <div class="container" style="padding-bottom: 0px;">
+            <div class="">
+                <h4 id="statement"style="margin-top: 27px;" class="col">I create, learn and create some more</h4>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <div class="card">
+                    <h4>Public Repositories</h4>
+                    <h6>${num_repos}</h6>
                 </div>
-            </main>
-        </body>
+                <div class="card">
+                    <h4>GitHub Stars</h4>
+                    <h6>${num_stars}</h6>
+                </div>
 
-        </html>`);
+            </div>
+            <div class="col">
+                <div class="card">
+                    <h4>Followers</h4>
+                    <h6>${num_followers}</h6>
+                </div>
+                <div class="card">
+                    <h4>Following</h4>
+                    <h6>${num_following}</h6>
+                </div>
+            </div>
+        </div>
+        <div class="wrapper" style="height: 233px; margin-bottom: 0px;">
+
+        </div>
+    </main>
+</body>
+
+</html>`);
                     
         await page.emulateMedia('screen');
         await page.pdf({
