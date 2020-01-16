@@ -1,21 +1,23 @@
-//calling my dependencies
+// Calling Dependancies
+
+// Calling inquirer for the terminal based interface
 const inquirer = require("inquirer");
-const fs = require('fs');
-// const PDFDocument = require('pdfkit');
+// Calling puppeteer for the pdf creation and html convertor
 const puppeteer = require('puppeteer');
+// Calling axios async way to call to github api
 const axios = require('axios').default;
+// Calling to generateHTML.js to get styling and colors
 const generate = require('./generateHTML');
-// const doc = new PDFDocument;
-//I'm pulling from the inquirer functions like prompt to ask the user questions
 
-
-
+// Initiate terminal based user interface
 inquirer.prompt([
+    // Ask user to input username
     {
         type: "input",
         name: "name",
         message: "What is your GitHub Username?"
     },
+    // Ask user to input favorite color of four
     {
         type: "rawlist",
         name: "color",
@@ -27,59 +29,37 @@ inquirer.prompt([
             "red"
         ]
     },
-
+// Then Once those choices have been made
 ]).then(function (data) {
-    //creating my file name
+    // Create a variable with there username combined with a string containing the .pdf extension
     const filename = data.name.toLowerCase().split(' ').join('') + "_profile.pdf";
+    // Assign html string to variable from the generateHTML.js file
     const html_for_pdf = generate.generateHTML(data);
-    //   print(html_for_pdf);
-    print(data.name);
-    print(data.color);
-
+    // Assing username to variable
     const user_name = data.name;
+    // Assing user color to variable
     const user_color = data.color;
+    // Create another way to call the github api to get the amount of starred repos
     const starred = user_name + "/starred";
-    let js_color
-    if (user_color === "green") {
-        js_color = generate.colors.green;
-    }
-    else if (user_color === "blue") {
-        js_color = generate.colors.blue;
-    }
-    else if (user_color === "pink") {
-        js_color = generate.colors.pink;
-    }
-    else if (user_color === "red") {
-        js_color = generate.colors.red;
-    }
-
-    print(js_color)
-    const wrapper_background = js_color.wrapperBackground;
-    const header_background = js_color.headerBackground;
-    const header_color = js_color.headerColor;
-    const photo_border_color = js_color.photoBorderColor;
-
-    print(wrapper_background);
-    print(header_background);
-    print(header_color);
-    print(photo_border_color);
-
-    get_starred(starred, filename, user_name, user_color, html_for_pdf);
+    // Call the Get Starred function to get how many starred repos you have
+    get_starred(starred, filename, user_name, html_for_pdf);
 });
-
-const get_starred = (starred, filename, user_name, color, html_for_pdf) => {
+// Function to get how many starred repos you have
+const get_starred = (starred, filename, user_name, html_for_pdf) => {
+    // Assign queryurl to variable
     const query_url = "https://api.github.com/users/" + starred;
-
+    // Make a request to the github api
     axios.get(query_url).then(function (response) {
+        // Get the amount of stars in the array of starred repos
         const num_stars = response.data.length
-        print("Number of Starred Repos " + num_stars)
-        // /.text("Number of Starred Repos " + num_stars)
-        get_github_request(filename, user_name, color, num_stars, html_for_pdf)
+        // Call the function to get all of the other information from github
+        get_github_request(filename, user_name, num_stars, html_for_pdf)
     })
 
 };
-
-const get_github_request = (filename, user_name, color, num_stars, html_for_pdf) => {
+// Function to get all of the other information from github
+const get_github_request = (filename, user_name, num_stars, html_for_pdf) => {
+    // Assign queryurl to variable
     const query_url = "https://api.github.com/users/" + user_name;
 
     axios.get(query_url).then(function (response) {
@@ -96,12 +76,12 @@ const get_github_request = (filename, user_name, color, num_stars, html_for_pdf)
         const num_followers = user_info.followers
         const num_following = user_info.following
 
-        run(filename, user_name, color, num_stars, name, profile_img, location, github_url, bio, blog_url, num_repos, num_followers, num_following, html_for_pdf);
+        run(filename, num_stars, name, profile_img, location, github_url, bio, blog_url, num_repos, num_followers, num_following, html_for_pdf);
 
     })
 };
 
-async function run(filename, user_name, color, num_stars, name, profile_img, location, github_url, bio, blog_url, num_repos, num_followers, num_following, html_for_pdf) {
+async function run(filename, num_stars, name, profile_img, location, github_url, bio, blog_url, num_repos, num_followers, num_following, html_for_pdf) {
     try {
         const browser = await puppeteer.launch();
         const page = await browser.newPage();
