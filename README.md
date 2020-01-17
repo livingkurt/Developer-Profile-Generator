@@ -33,7 +33,11 @@ Then produces a sleek and clean pdf of all your github user information to be us
 <!-- GETTING STARTED -->
 ## Getting Started
 
+
+
 * Click [Here](https://github.com/livingkurt/Developer-Profile-Generator/archive/master.zip) to download the repo to your local machine.
+
+![Gif](images/demonstration.gif)
 ### Open up your terminal
 * Change directory to the repo directory
 * Type into terminal "node index.js"
