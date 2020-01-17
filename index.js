@@ -178,6 +178,7 @@ async function create_pdf(filename, user_name, num_stars, name, profile_img, loc
         </html>`
         // Add html and github information to pdf
         await page.setContent(html);
+        // Make HTML file
         if (html_choice){
             // Creates html file as well
             await fs.writeFile('index.html', html, (error) => { /* handle error */ });
