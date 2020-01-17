@@ -120,8 +120,7 @@ async function create_pdf(filename, user_name, num_stars, name, profile_img, loc
         <body style="font-family: "Custom_font";>
             <main style="padding: 0px">
                 <div class="row wrapper" style="padding: 0px;margin: 0px;">
-                    <div class="photo-header" style="margin-top: 100px;
-                    ">
+                    <div class="photo-header" style="margin-top: 100px;">
                         <!-- <div class="row container"> -->
                             <img src=${profile_img} height="100px" width="100px"alt="profile" class="">
                         <!-- </div> -->
@@ -170,9 +169,8 @@ async function create_pdf(filename, user_name, num_stars, name, profile_img, loc
                         </div>
                     </div>
                 </div>
-                <div class="wrapper" style="height: 205px; margin-bottom: 0px;">
-
-                </div>
+                <footer class="wrapper" style="position: absolute;left: 0;bottom: 0;height: 225px;width: 100%;overflow: hidden;">
+                </footer>
             </main>
         </body>
         </html>`

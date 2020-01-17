@@ -50,6 +50,10 @@ module.exports = {
          *::before {
          box-sizing: border-box;
          }
+         html {
+          position: relative; 
+          min-height: 100%;
+         }
          html, body {
          padding: 0;
          margin: 0;

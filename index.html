@@ -16,6 +16,10 @@
          *::before {
          box-sizing: border-box;
          }
+         html {
+          position: relative; 
+          min-height: 100%;
+         }
          html, body {
          padding: 0;
          margin: 0;
@@ -24,7 +28,7 @@
          height: 100%;
          }
          .wrapper {
-         background-color: #7D3636;
+         background-color: #7D4154;
          padding-top: 100px;
          }
          body {
@@ -60,7 +64,7 @@
          font-size: 1.2em;
          }
          #statement{
-          color: #411C1C;
+          color: #41222C;
          }
          .photo-header {
          position: relative;
@@ -69,7 +73,7 @@
          display: flex;
          justify-content: center;
          flex-wrap: wrap;
-         background-color: #BF5252;
+         background-color: #BF6381;
          color: white;
          padding: 10px;
          width: 95%;
@@ -81,7 +85,7 @@
          border-radius: 50%;
          object-fit: cover;
          margin-top: -75px;
-         border: 6px solid 411C1C;
+         border: 6px solid #41222C;
          box-shadow: rgba(0, 0, 0, 0.3) 4px 1px 20px 4px;
          }
          .photo-header h1, .photo-header h2 {
@@ -124,7 +128,7 @@
          .card {
            padding: 20px;
            border-radius: 6px;
-           background-color: #BF5252;
+           background-color: #BF6381;
            color: white;
            margin: 20px;
          }
@@ -192,7 +196,7 @@
                     <div class="col">
                         <div class="card">
                             <h4>Followers</h4>
-                            <h6>10</h6>
+                            <h6>11</h6>
                         </div>
                         <div class="card">
                             <h4>Following</h4>
@@ -200,9 +204,8 @@
                         </div>
                     </div>
                 </div>
-                <div class="wrapper" style="height: 205px; margin-bottom: 0px;">
-
-                </div>
+                <footer class="wrapper" style="position: absolute;left: 0;bottom: 0;height: 225px;width: 100%;overflow: hidden;">
+                </footer>
             </main>
         </body>
         </html>
