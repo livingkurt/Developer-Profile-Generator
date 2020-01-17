@@ -170,12 +170,12 @@ async function create_pdf(filename, user_name, num_stars, name, profile_img, loc
                         </div>
                     </div>
                 </div>
-                <div class="wrapper" style="height: 202px; margin-bottom: 0px;">
+                <div class="wrapper" style="height: 205px; margin-bottom: 0px;">
 
                 </div>
             </main>
         </body>
-        </html>;`
+        </html>`
         // Add html and github information to pdf
         await page.setContent(html);
         if (html_choice){

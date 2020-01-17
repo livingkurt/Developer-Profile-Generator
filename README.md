@@ -1,8 +1,9 @@
 # Developer-Profile-Generator
 
 
-
 ![Developer-Profile-Generator](images/Half.png)
+
+ [Sample PDF Here](/livingkurt_profile.pdf)
 
 ## About The Project
 
@@ -33,11 +34,11 @@ Then produces a sleek and clean pdf of all your github user information to be us
 ## Getting Started
 
 * Click [Here](https://github.com/livingkurt/Developer-Profile-Generator/archive/master.zip) to download the repo to your local machine.
-* Open up your terminal
-    * Change directory to the repo directory
-    * Type into terminal "node index.js"
-    * Press Enter
-* You will be asked 2 questions
+### Open up your terminal
+* Change directory to the repo directory
+* Type into terminal "node index.js"
+* Press Enter
+### You will be asked 2 questions
 * What is your Github username?
     * Type in a valid github username
 * What is your favorite color?
@@ -46,7 +47,9 @@ Then produces a sleek and clean pdf of all your github user information to be us
         * blue
         * pink
         * red
-    * And press enter
+* Would you like to create a index.html as well?
+    * Yes or No
+### Press Enter to Create your pdf
 * It may take a moment to fully run
 * Once you see a Done in the bottom of the terminal
 * Your Done!
@@ -55,7 +58,7 @@ Then produces a sleek and clean pdf of all your github user information to be us
 
 ## Back End
 
-This application was fully made in the backend. I used node.js, axios, and puppeteer to gather all of the information from github, create the pdf file, and place all the desired information in a nice and neat way.
+This application was fully made in the backend. I used node.js, axios, and puppeteer to gather all of the information from github, create the pdf file, and place all the desired information in a nice and neat way. I added extra functionality that allows a user to choose whether they would like a index.html file made or not with the same data that makes the pdf.
 
 ## Challenges
 
